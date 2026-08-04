@@ -1,0 +1,9 @@
+{
+  "name": "OrderAndOrganize",
+  "version_number": "0.5.0",
+  "website_url": "",
+  "description": "Auto-restock low inventory and organize storage shelves by category in Supermarket Together.",
+  "dependencies": [
+    "BepInEx-BepInExPack-5.4.2100"
+  ]
+}
