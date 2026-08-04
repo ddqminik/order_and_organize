@@ -1,180 +1,263 @@
-# Order & Organize - BepInEx 5 Mod for Supermarket Together
+# Order & Organize
 
-Automatically tracks product stock levels and restocks low-inventory items in Supermarket Together.
+**A BepInEx 5 mod for [Supermarket Together](https://store.steampowered.com/app/2590510/Supermarket_Together/) that automates inventory restocking and lets you organize your storage shelves by product category.**
 
-## Features
+**Version:** 0.5.0
+**Author:** ddqminik
+**Requires:** [BepInEx 5](https://github.com/BepInEx/BepInEx/releases)
 
-### Manual Mode ("Add Low Stock" Button)
-A button on the ordering interface that scans all products and adds one box of each product below the configured threshold to the shopping list. It:
-- Skips products already on your shopping list
-- Skips locked/unorderable products
-- Prioritizes by lowest stock, then greatest shortage, then product ID
-- Never buys anything automatically -- only adds to your list
-- Shows a notification with the count of added and skipped products
+---
 
-### Automatic Mode (Optional)
-An optional system that periodically purchases products below the threshold without manual intervention. It:
-- Is **disabled by default** -- enable via hotkey (F8) or config
-- Only runs when you are the host (singleplayer or multiplayer host)
-- Only purchases when the shopping list is empty (never interferes with manual orders)
-- Respects a configurable cash reserve (never spends below your reserve)
-- Tracks pending orders in memory to prevent duplicate purchases
-- Shows notifications with box count and total spend per cycle
+## What Does This Mod Do?
+
+Order & Organize adds three major features to Supermarket Together:
+
+1. **Smart Restock Button** -- A one-click button that scans your entire inventory and adds low-stock products to your shopping list.
+2. **Automatic Ordering** -- An optional system that periodically checks stock levels and purchases products for you, completely hands-free.
+3. **Category Storage Shelves** -- Tag your storage shelves with product categories (Dairy, Drinks, Snacks, etc.) so only matching products can be placed there, and employees prioritize the right shelf when putting items away.
+
+All features work through the game's native systems -- the mod never edits your save file or manipulates your money directly.
+
+---
+
+## Features in Detail
+
+### Smart Restock Button
+
+When you open the ordering computer in your store, you'll see an **"Add Low Stock"** button. Clicking it:
+
+- Scans every product in your store
+- Finds products where your total stock (shelves + storage + boxes) is below a configurable threshold (default: 40 units)
+- Adds one box of each low-stock product to your shopping list
+- Skips products that are already on your shopping list
+- Skips locked or unorderable products
+- Prioritizes the most understocked products first
+- Shows a notification telling you how many products were added and how many were skipped
+
+This is purely manual -- it only adds items to your shopping list. You still review and confirm the purchase yourself.
+
+### Automatic Ordering
+
+For a fully hands-free experience, you can enable automatic ordering. This is **disabled by default** and must be turned on intentionally.
+
+**How to use it:**
+
+1. Press **F8** (default hotkey) to toggle automatic ordering on or off
+2. When enabled, the mod scans your inventory every 10 seconds (configurable)
+3. If it finds products below the threshold, it purchases them automatically
+4. A notification appears showing how many boxes were ordered and the total cost
+
+**Safety features of automatic ordering:**
+
+- **Cash reserve**: Set a minimum balance (e.g. $5,000) that the mod will never spend below. You'll always have money for rent, licenses, and other expenses.
+- **No interference with manual orders**: If you have items on your shopping list, automation pauses entirely until the list is clear. Your manual orders are never touched.
+- **Duplicate protection**: The mod tracks what it has already ordered and won't re-order the same product until the previous delivery arrives or a timeout expires.
+- **Host-only**: In multiplayer, automatic ordering only works for the host. This prevents conflicts when multiple players have the mod installed.
 
 ### Category Storage Shelves
-Tag storage shelves with product categories to organize your backroom:
-- Press **G** while looking at a storage shelf to open the category picker
-- Scroll or use arrow keys to browse categories, **Enter** to apply, **Backspace** to clear, **G** to cancel
-- Tagged shelves only accept products from that category (player placement is blocked otherwise)
-- Employees prioritize category-matched storage when putting away leftovers
-- Color-coded floating labels above tagged shelves (toggle with **H** key)
-- Assignments persist across sessions and are backed up automatically
 
-### In-Game Config Window (F7)
-A scrollable configuration panel for adjusting all mod settings in real-time without editing config files.
+Tired of employees dumping products on random storage shelves? This feature lets you designate shelves for specific product categories.
 
-## Stock Value Meanings
+**How to use it:**
 
-The ordering interface displays three stock values per product:
+1. Look directly at a storage shelf in your backroom
+2. Press **G** (default hotkey) to open the category picker
+3. Use the **scroll wheel** or **arrow keys** to browse available categories (these match the tabs in the ordering interface -- Dairy, Drinks, Fruits & Vegetables, etc.)
+4. Press **Enter** to assign the selected category
+5. Press **Backspace** to remove an existing category assignment
+6. Press **G** again to cancel without making changes
 
-| Color | Meaning | Source |
-|-------|---------|--------|
-| Red area | **On Shelves** | Products displayed on store shelves |
-| Green area | **In Storage** | Products in storage containers |
-| Yellow area | **In Boxes/Movement** | Boxes on ground + carried by employees + carried by players |
+**What happens after you assign a category:**
 
-**CombinedStock** = OnShelves + InStorage + InBoxes/Movement
+- A color-coded floating label appears above the shelf showing its assigned category
+- **Player placement is restricted**: If you try to place a product from a different category on a tagged shelf, it will be blocked
+- **Employee AI is category-aware**: When employees put away leftover products, they'll look for a shelf tagged with the matching category first
+- Assignments are saved automatically and persist when you close and reopen the game
 
-Products with CombinedStock below the threshold (default: 40 units) qualify for restocking.
+**Floating labels:**
+
+- Colored labels float above every tagged shelf so you can see your organization at a glance
+- Press **H** (default hotkey) to toggle labels on or off
+- You can also toggle labels from the in-game config window
+- Hiding labels can help with performance if you have many tagged shelves
+
+### In-Game Configuration
+
+Press **F7** (default hotkey) to open a scrollable settings window where you can adjust every mod setting in real-time without closing the game or editing files.
+
+---
 
 ## Installation
 
-### Prerequisites
-- [Supermarket Together](https://store.steampowered.com/app/2590510/Supermarket_Together/) installed
-- [BepInEx 5](https://github.com/BepInEx/BepInEx/releases) installed in the game directory
+### Step 1: Install BepInEx 5
 
-### Install the Mod
-1. Download `OrderAndOrganize.dll` from the releases (or build from source)
-2. Copy to `<GameDir>\BepInEx\plugins\OrderAndOrganize\OrderAndOrganize.dll`
-3. Launch the game
+If you don't already have BepInEx installed:
 
-## Building from Source
+1. Download [BepInEx 5 (x64)](https://github.com/BepInEx/BepInEx/releases) -- get the latest **5.x** release, not 6.x
+2. Extract the contents into your Supermarket Together game folder (where `Supermarket Together.exe` is located)
+3. Run the game once and close it -- BepInEx will create its folder structure
 
-### Requirements
-- .NET SDK 8.0
-- Supermarket Together with BepInEx 5 installed
+Your game folder should now have a `BepInEx` folder with `plugins`, `config`, and `core` subfolders.
 
-### Setup
-1. Clone this repository
-2. Copy `Directory.Build.props.example` to `Directory.Build.props`
-3. Edit `Directory.Build.props` and set `GameDir` to your game installation path
+### Step 2: Install Order & Organize
 
-### Build
-```powershell
-.\scripts\build.ps1
-```
+1. Download `OrderAndOrganize.dll`
+2. Create a folder: `<GameDir>\BepInEx\plugins\OrderAndOrganize\`
+3. Place `OrderAndOrganize.dll` inside that folder
+4. Launch the game
 
-### Deploy
-```powershell
-.\scripts\deploy.ps1
-```
-This builds and copies the DLL to the game's plugin directory. The game must not be running.
+On first launch, the mod creates its config file automatically.
 
-### Backup Saves
-```powershell
-.\scripts\backup-save.ps1
-```
-Creates a timestamped backup of your save data in `Documents\Supermarket Together Backups\`.
+---
 
-### Collect Logs
-```powershell
-.\scripts\collect-logs.ps1
-```
-Copies BepInEx logs to a timestamped file in the `logs/` directory with Order & Organize entries highlighted.
+## Controls & Hotkeys
 
-## Configuration
+| Key | Action | When |
+|-----|--------|------|
+| **F7** | Open/close the settings window | Anytime in-game |
+| **F8** | Toggle automatic ordering on/off | Anytime in-game |
+| **G** | Open category picker / Cancel picker | While looking at a storage shelf / While picker is open |
+| **H** | Toggle floating category labels | Anytime in-game |
+| **Enter** | Apply selected category | While category picker is open |
+| **Backspace** | Clear category from shelf | While category picker is open |
+| **Scroll wheel / Arrow keys** | Browse categories | While category picker is open |
 
-After first launch, a config file is created at `<GameDir>\BepInEx\config\com.ddqminik.supermarkettogether.orderandorganize.cfg`.
+All hotkeys are configurable in the settings window (F7) or the config file.
 
-| Setting | Default | Description |
-|---------|---------|-------------|
-| **General/Enabled** | true | Enable or disable the mod |
-| **General/ThresholdUnits** | 40 | Stock level below which products qualify for restocking |
-| **General/ButtonText** | "Add Low Stock" | Text on the manual restock button |
-| **General/VerboseLogging** | false | Log per-product decisions for debugging |
-| **General/ConfigWindowHotkey** | F7 | Key to toggle the in-game config window |
-| **Automation/AutoOrderAtStartup** | false | Start automation enabled when game loads |
-| **Automation/ToggleHotkey** | F8 | Key to toggle automatic ordering |
-| **Automation/ScanIntervalSeconds** | 10 | Seconds between automatic scans (2-300) |
-| **Automation/CashReserve** | 0 | Minimum money to keep in reserve |
-| **Automation/PendingOrderTimeoutSeconds** | 120 | Seconds before stale pending orders are re-evaluated |
-| **Automation/ShowNotifications** | true | Show in-game notifications for automation events |
-| **CategoryShelves/Enabled** | true | Enable the category storage shelf feature |
-| **CategoryShelves/Hotkey** | G | Key to open the category picker on a storage shelf |
-| **CategoryShelves/LabelsVisible** | true | Show floating category labels above tagged shelves |
-| **CategoryShelves/LabelsToggleHotkey** | H | Key to toggle floating labels on/off |
+---
 
-## Safety & Protection
+## Understanding Stock Values
 
-- **No save file modification**: All actions use the game's native APIs
-- **No direct money editing**: Money is deducted through the game's `BuyCargo()` / `CmdAlterFunds` flow
-- **Shopping list safety**: Automation halts if manual items are detected on the shopping list
-- **Cash reserve**: Configure a minimum balance that automation will never spend below
-- **Pending order tracking**: In-memory tracking prevents duplicate orders before the game reflects deliveries
-- **Host-only automation**: Automatic purchases only execute when you are the host/server
-- **Scene cleanup**: All pending order records are cleared when leaving a game session
-- **Category data protection**: Three-layer safety for shelf assignments -- scene guard (120s grace period), 50% purge threshold, and automatic backup/restore
+The ordering interface shows three colored stock values for each product:
 
-## Uninstallation
+| Color | What It Means |
+|-------|---------------|
+| **Red** | Units currently on display shelves |
+| **Green** | Units in storage containers |
+| **Yellow** | Units in unopened boxes, being carried by employees, or being carried by you |
 
-1. Delete `<GameDir>\BepInEx\plugins\OrderAndOrganize\`
-2. Optionally delete `<GameDir>\BepInEx\config\com.ddqminik.supermarkettogether.orderandorganize.cfg`
-3. Optionally delete `<GameDir>\BepInEx\config\OrderAndOrganize_CategoryShelves.json` (and `.backup`)
+**Total Stock** = Red + Green + Yellow
+
+The mod considers a product "low stock" when its total stock is below the threshold (default: 40 units). You can change this threshold in the settings.
+
+---
+
+## Settings Reference
+
+All settings can be changed in-game by pressing **F7**, or by editing the config file at:
+`<GameDir>\BepInEx\config\com.ddqminik.supermarkettogether.orderandorganize.cfg`
+
+### General
+
+| Setting | Default | What It Does |
+|---------|---------|--------------|
+| Enabled | On | Master switch -- turn off to completely disable the mod |
+| Threshold | 40 | Products with total stock below this number are considered low-stock |
+| Button Text | "Add Low Stock" | Text shown on the manual restock button |
+| Config Window Hotkey | F7 | Key to open/close the settings window |
+
+### Automatic Ordering
+
+| Setting | Default | What It Does |
+|---------|---------|--------------|
+| Auto-Order at Startup | Off | When enabled, automatic ordering turns on as soon as you load into your store |
+| Toggle Hotkey | F8 | Key to turn automatic ordering on or off |
+| Scan Interval | 10 seconds | How often the mod checks your inventory (range: 2-300 seconds) |
+| Cash Reserve | 0 | The mod will never spend your balance below this amount |
+| Pending Order Timeout | 120 seconds | How long to wait before allowing a re-order of the same product |
+| Show Notifications | On | Display in-game notifications when automatic purchases are made |
+
+### Category Shelves
+
+| Setting | Default | What It Does |
+|---------|---------|--------------|
+| Enabled | On | Turn the category shelf feature on or off |
+| Hotkey | G | Key to open the category picker on a storage shelf |
+| Labels Visible | On | Show floating category labels above tagged shelves |
+| Labels Toggle Hotkey | H | Key to show/hide floating labels |
+
+---
 
 ## Multiplayer
 
-This mod is designed for **singleplayer and host use**. When playing as a multiplayer host, all features work normally. Non-host clients can use the manual restock button and category picker, but purchases are host-authoritative and category assignments are local-only. Automatic ordering is automatically disabled for non-host players.
+Order & Organize is designed primarily for **singleplayer and host use**.
+
+| Feature | As Host | As Client (Non-Host) |
+|---------|---------|---------------------|
+| Smart Restock Button | Works fully | Adds to shopping list (purchases are host-authoritative) |
+| Automatic Ordering | Works fully | Automatically disabled |
+| Category Shelves (picker + labels) | Works fully | Works, but assignments are stored locally on your machine |
+| Category Placement Blocking | Works fully | Works fully |
+| Employee Category AI | Works fully | Not applicable (host controls employees) |
+| In-Game Config Window | Works fully | Works fully |
+
+**Important notes for multiplayer:**
+- Only the **host** needs the mod for automatic ordering to work
+- Category shelf assignments are **not shared** between players -- each player has their own local assignments
+- There is no conflict if some players have the mod and others don't
+- The mod does not affect other players' gameplay or UI
+
+---
 
 ## Compatibility
 
-- **Target Framework**: .NET Framework 4.7.2
-- **BepInEx**: 5.x
-- **Game API**: Uses reflection and Harmony patches to access game internals
-- **Risk**: Game updates may break the mod if internal APIs change. The adapter pattern isolates all game access for easier updates.
+- **Game version**: Tested with Supermarket Together (latest Steam version as of August 2026)
+- **BepInEx version**: Requires BepInEx 5.x (not compatible with BepInEx 6.x)
+- **Other mods**: Order & Organize should work alongside most other BepInEx mods. It patches a small number of game methods (employee restocking and shelf placement) and avoids conflicts by checking for existing patches. If you experience issues with another mod, try disabling one at a time to isolate the conflict.
+- **Game updates**: Major game updates may break the mod if the developers change internal code. The mod logs clear error messages if it can't find expected game APIs, so check the BepInEx log if something stops working after a game update.
 
-## Distribution
+---
 
-### Thunderstore
-```powershell
-.\scripts\package-thunderstore.ps1
-```
-Creates a ready-to-upload zip in `dist/`. Upload at [thunderstore.io/package/create](https://thunderstore.io/package/create/).
+## Troubleshooting
 
-### NexusMods
-Upload the DLL from `src\OrderAndOrganize\bin\Release\OrderAndOrganize.dll` along with the README through the NexusMods web interface.
+### The mod isn't loading
+- Make sure you have **BepInEx 5** installed (not 6.x)
+- Check that `OrderAndOrganize.dll` is in `BepInEx\plugins\OrderAndOrganize\`
+- Look at `BepInEx\LogOutput.log` for error messages
 
-## Project Structure
+### The "Add Low Stock" button doesn't appear
+- Open the ordering computer and wait a moment -- the button appears once the ordering UI is fully loaded
+- Check that the mod is enabled (press F7 and verify "Enabled" is checked)
 
-```
-OrderAndOrganize/
-├── src/OrderAndOrganize/           # Main mod source
-│   ├── Plugin.cs               # BepInEx entry point + Harmony patches
-│   ├── Configuration/          # BepInEx config bindings
-│   ├── Game/                   # Game API adapters (compatibility layer)
-│   ├── Models/                 # Data models (no Unity dependency)
-│   ├── Services/               # Business logic
-│   ├── UI/                     # Ordering UI, config window, category picker
-│   └── Diagnostics/            # Verbose logging & API verification
-├── tests/OrderAndOrganize.Tests/   # Unit tests (xUnit)
-├── scripts/                    # Build, deploy, backup, log collection
-├── docs/                       # Architecture, API findings, test matrix
-└── README.md
-```
+### Category picker doesn't open
+- Make sure you're looking directly at a **storage shelf** (not a display shelf)
+- The shelf must be within interaction range
+- Check that Category Shelves are enabled in settings (F7)
 
-## Running Tests
+### My category assignments disappeared
+- The mod creates automatic backups. If assignments are lost, they should be restored automatically on next load
+- Your backup file is at: `BepInEx\config\OrderAndOrganize_CategoryShelves.json.backup`
 
-```powershell
-dotnet test tests\OrderAndOrganize.Tests\OrderAndOrganize.Tests.csproj
-```
+### Automatic ordering isn't working
+- Press F8 to make sure it's enabled (a notification will confirm)
+- Check that your shopping list is empty -- automation pauses if there are manual items on the list
+- In multiplayer, automatic ordering only works for the host
+- Make sure you have enough money (above your cash reserve setting)
 
-45 unit tests cover threshold logic, sorting, cash reserve calculations, pending order tracking, and boundary conditions.
+### Performance issues
+- If you have many tagged shelves, try hiding floating labels (press H)
+- Increase the scan interval in settings to reduce how often inventory is checked
+
+---
+
+## Uninstallation
+
+1. Delete the folder: `<GameDir>\BepInEx\plugins\OrderAndOrganize\`
+2. Optionally delete the config file: `<GameDir>\BepInEx\config\com.ddqminik.supermarkettogether.orderandorganize.cfg`
+3. Optionally delete shelf data: `<GameDir>\BepInEx\config\OrderAndOrganize_CategoryShelves.json` (and `.backup`)
+
+Removing the mod has no effect on your save file. Your store will continue to work normally.
+
+---
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for a full history of changes.
+
+---
+
+## Credits
+
+Created by **ddqminik**.
+
+Built with [BepInEx](https://github.com/BepInEx/BepInEx) and [HarmonyX](https://github.com/BepInEx/HarmonyX).
